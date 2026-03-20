@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML &lt;dialog&gt; — Native POC</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body class="page">
+    <h1 class="page__title">POC HTML Dialog</h1>
+
+    <!-- 1. MODAL -->
+    <section class="demo">
+      <h2 class="demo__title">1. Modal — <code>showModal()</code></h2>
+      <p class="demo__desc">Backdrop natif, trap focus, fermeture via <kbd>Escape</kbd> — tout géré par le navigateur.</p>
+      <button class="btn btn--primary" onclick="dialogModal.showModal()">Ouvrir la modal</button>
+
+      <dialog id="dialog-modal" class="dialog" aria-labelledby="modal-title">
+        <h2 id="modal-title" class="dialog__title">Modal native</h2>
+        <p>Naviguez avec <kbd>Tab</kbd> — le focus reste dans la dialog. Appuyez sur <kbd>Escape</kbd> pour fermer.</p>
+        <label>
+          Champ focusable
+          <input class="field" type="text" />
+        </label>
+        <div class="dialog__actions">
+          <button class="btn" onclick="dialogModal.close()">Fermer</button>
+        </div>
+      </dialog>
+    </section>
+
+    <!-- 2. NON-MODAL -->
+    <section class="demo">
+      <h2 class="demo__title">2. Non-modal — <code>show()</code></h2>
+      <p class="demo__desc">Pas de backdrop, pas de blocage — la page reste interactive derrière.</p>
+      <button class="btn btn--primary" onclick="dialogNonModal.show()">Ouvrir la dialog</button>
+
+      <dialog id="dialog-non-modal" class="dialog dialog--non-modal" aria-labelledby="non-modal-title">
+        <h2 id="non-modal-title" class="dialog__title">Non-modale</h2>
+        <p>Interagissez avec la page pendant que cette dialog est ouverte.</p>
+        <button class="btn" onclick="dialogNonModal.close()">Fermer</button>
+      </dialog>
+    </section>
+
+    <!-- 3. FORM METHOD DIALOG -->
+    <section class="demo">
+      <h2 class="demo__title">3. <code>&lt;form method="dialog"&gt;</code></h2>
+      <p class="demo__desc">La soumission ferme la dialog nativement et expose <code>dialog.returnValue</code>.</p>
+      <button class="btn btn--primary" onclick="dialogForm.showModal()">Ouvrir le formulaire</button>
+      <p id="return-value" class="return-value" aria-live="polite" hidden></p>
+
+      <dialog id="dialog-form" class="dialog" aria-labelledby="form-title">
+        <h2 id="form-title" class="dialog__title">Formulaire natif</h2>
+        <form method="dialog">
+          <label>
+            Votre choix
+            <select id="form-choice" class="field">
+              <option value="option-1">Option 1</option>
+              <option value="option-2">Option 2</option>
+              <option value="option-3">Option 3</option>
+            </select>
+          </label>
+          <div class="dialog__actions">
+            <button class="btn" type="submit" value="cancel">Annuler</button>
+            <button class="btn btn--primary" type="submit" value="confirm">Confirmer</button>
+          </div>
+        </form>
+      </dialog>
+    </section>
+
+    <!-- 4. AUTOFOCUS -->
+    <section class="demo">
+      <h2 class="demo__title">4. <code>autofocus</code></h2>
+      <p class="demo__desc">Par défaut le focus va sur le premier élément focusable. <code>autofocus</code> permet de cibler un élément précis.</p>
+      <div class="btn-group">
+        <button class="btn btn--primary" onclick="dialogFocusDefault.showModal()">Focus par défaut</button>
+        <button class="btn" onclick="dialogFocusAutofocus.showModal()">Avec <code>autofocus</code></button>
+      </div>
+
+      <dialog id="dialog-focus-default" class="dialog" aria-labelledby="focus-default-title">
+        <h2 id="focus-default-title" class="dialog__title">Focus par défaut</h2>
+        <p>Le focus arrive sur le premier élément focusable (l'input).</p>
+        <label>
+          Exemple
+          <input class="field" type="text" placeholder="Focus ici à l'ouverture" />
+        </label>
+        <div class="dialog__actions">
+          <button class="btn" onclick="dialogFocusDefault.close()">Fermer</button>
+        </div>
+      </dialog>
+
+      <dialog id="dialog-focus-autofocus" class="dialog" aria-labelledby="focus-autofocus-title">
+        <h2 id="focus-autofocus-title" class="dialog__title">Avec <code>autofocus</code></h2>
+        <p>Le focus arrive sur le bouton grâce à <code>autofocus</code>, pas sur l'input.</p>
+        <label>
+          Exemple
+          <input class="field" type="text" placeholder="Pas de focus ici" />
+        </label>
+        <div class="dialog__actions">
+          <button autofocus class="btn" onclick="dialogFocusAutofocus.close()">Fermer (autofocus)</button>
+        </div>
+      </dialog>
+    </section>
+
+    <script>
+      const dialogModal          = document.getElementById('dialog-modal');
+      const dialogNonModal       = document.getElementById('dialog-non-modal');
+      const dialogForm           = document.getElementById('dialog-form');
+      const dialogFocusDefault   = document.getElementById('dialog-focus-default');
+      const dialogFocusAutofocus = document.getElementById('dialog-focus-autofocus');
+      const returnValueEl        = document.getElementById('return-value');
+      const formChoice           = document.getElementById('form-choice');
+
+      dialogForm.addEventListener('close', function () {
+        returnValueEl.hidden = false;
+        returnValueEl.textContent = this.returnValue === 'confirm'
+          ? `returnValue : 'confirm' — choix : '${formChoice.value}'`
+          : `returnValue : 'cancel'`;
+      });
+    </script>
+  </body>
+</html>
