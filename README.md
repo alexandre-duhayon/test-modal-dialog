@@ -4,7 +4,7 @@ Démonstration des cas d'usage de la balise HTML native `<dialog>`.
 
 **Aucune dépendance** — HTML, CSS et JavaScript vanilla uniquement.
 
-> Ouvrir `index.html` directement dans un navigateur — aucun serveur requis.
+> Ouvrir ['index.html'](https://alexandre-duhayon.github.io/test-modal-dialog) directement dans un navigateur.
 
 ---
 
